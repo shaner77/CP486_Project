@@ -4,7 +4,9 @@ from re import split
 
 #  type number,  n documents
 def classify(vector, t, n):
-
+    
+    #vector lengths must be the same
+    
     count0 = [0]*len(vector)
     count1 = [0]*len(vector)
     count2 = [0]*len(vector)
@@ -19,7 +21,7 @@ def classify(vector, t, n):
     elif t == 1:
         b = f'{getcwd()}\cars{n}.html'
     elif t == 2:
-        b = f'{getcwd()}\sports{n}.html'
+        b = f'{getcwd()}\Sport {n}.htm'
     
     print(f'FILE: {b}')
     f = open(b, "r", encoding='utf-8')
@@ -61,11 +63,14 @@ def classify(vector, t, n):
         
         i = i + 1
     if t == 0:
-        o.write(f'Tech{n}\t{row}')
+        o.write(f'Tech{n}'.ljust(12))
+        o.write(f'{row}')
     elif t == 1:
-        o.write(f'Cars{n}\t{row}')
+        o.write(f'Cars{n}'.ljust(12))
+        o.write(f'{row}')
     elif t == 2:
-        o.write(f'Sports{n}\t{row}')
+        o.write(f'Sports{n}'.ljust(12))
+        o.write(f'{row}')
     
     print("Topic: ")
     if total[0] > total[2] and total[0] > total[1]:
@@ -90,9 +95,12 @@ def classify(vector, t, n):
     #To recover the data in the output file use the following function
     a = open("output0.txt", 'r')
     next(a)
+    next(a)
     b = open("output1.txt", 'r')
     next(b)
+    next(b)
     c = open("output2.txt", 'r')
+    next(c)
     next(c)
     o = open("totaloutput.txt", 'w')
     
@@ -110,16 +118,19 @@ def classify(vector, t, n):
     #===========================================================================
     
 def main(t, n):
-    vector0 = ["iphone", "coding", "internet", "software", "network", "samsung", "computer", "device"]
-    vector1 = ["engine", "gas", "vehicle", "drive", "motor", "car", "truck", "road"]
-    vector2 = ["hockey", "football", "golf", "soccer", "basketball", "baseball", "play", "sport"]
+    vector0 = ["iphone", "coding", "internet", "software", "network", "samsung", "computer", "device", "screen", "wire"]
+    vector1 = ["engine", "gas", "vehicle", "drive", "motor", "car", "truck", "road", "wheel", "tire"]
+    vector2 = ["hockey", "football", "golf", "soccer", "basketball", "baseball", "play", "sport", "run", "kick"]
     vector = vector0 + vector1 + vector2
 
     j = 1
     
     o = open(f'output{t}.txt', 'w')
     i = 0
-    o.write('Vector')
+    
+    for d in vector:
+        o.write(f'{d},')
+    o.write('\nVector'.ljust(12))
     while(i < len(vector)):
         o.write(f'\t{i}')
         i = i + 1
