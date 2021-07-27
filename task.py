@@ -1,77 +1,135 @@
 from nt import getcwd
 import re
-def classify():
-    vector1 = ["iphone", "apple", "coding", "internet", "software", "amazon", "samsung", "hack", "internet", "computer", "google", "bitcoin"]
-    count1 = [0]*len(vector1)
-    
-    vector2 = ["engine", "gas", "vehicle", "drive", "clutch", "transmission", "suv", "van", "car", "truck", "road", "racecar"]
-    count2 = [0]*len(vector2)
-    
-    vector3 = ["hockey", "football", "golf", "soccer", "basketball", "tennis", "ball", "run", "kick", "baseball", "play", "swim", "sport"]
-    count3 = [0]*len(vector3)
+from re import split
+
+#  type number,  n documents
+def classify(vector, t, n):
+
+    count0 = [0]*len(vector)
+    count1 = [0]*len(vector)
+    count2 = [0]*len(vector)
 
 
     def cleanhtml(raw_html):
         cleanr = re.compile('< . , ""{}\/*?=><()>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});')
         cleantext = re.sub(cleanr, '', raw_html)
         return cleantext
+    if t == 0:
+        b = f'{getcwd()}\\tech{n}.html'
+    elif t == 1:
+        b = f'{getcwd()}\cars{n}.html'
+    elif t == 2:
+        b = f'{getcwd()}\sports{n}.html'
     
-    b = f'{getcwd()}\sports1.html'
-    #b = f'{getcwd()}\sports2.html'
-    #b = f'{getcwd()}\cars1.html'
-    #b = f'{getcwd()}\cars2.html'
-    #b = f'{getcwd()}\\tech1.html'                #be aware of the character that follows  \  if n, t, etc use \\
-    #b = f'{getcwd()}\\tech2.html'
-    
-    print(b)
+    print(f'FILE: {b}')
     f = open(b, "r", encoding='utf-8')
     
     for line in f:
         for word in line.split():
             word = cleanhtml(word)
             word = word.lower()
-            print(f'{word}\n')
+            #print(f'{word}\n')
             
             i = 0
-            while (i < len(vector1)): 
-                if word == vector1[i]:
+            while (i < len(vector)): 
+                if word == vector[i] and t == 0:
+                    count0[i] = count0[i] + 1
+                elif word == vector[i] and t == 1:
                     count1[i] = count1[i] + 1
-                elif word == vector2[i]:
+                elif word == vector[i] and t == 2:
                     count2[i] = count2[i] + 1
-                elif word == vector3[i]:
-                    count3[i] = count3[i] + 1
                 i = i + 1
+
     i = 0
-    total1=0
-    while(i < len(vector1)):
-        print(f'{vector1[i]}: {count1[i]}   ')
-        total1 = total1 + count1[i]
-        i = i + 1
+    total = [0,0,0]
+    full = ""
+    row = ""
+    o = open(f'output{t}.txt', 'a')
+    i = 0
+    o.write('\n')
     
-    i = 0
-    total2=0
-    print("\n")
-    while(i < len(vector2)):
-        print(f'{vector2[i]}: {count2[i]}   ')
-        total2 = total2 + count2[i]
-        i = i + 1
-    
-    i = 0
-    total3=0
-    print("\n")
-    while(i < len(vector3)):
-        print(f'{vector3[i]}: {count3[i]}   ')
-        total3 = total3 + count3[i]
-        i = i + 1   
+    while(i < len(vector)):
+        if t == 0:
+            total[0] = total[0] +  count0[i]
+            row = row + str(count0[i]) + '\t'
+        elif t == 1:
+            total[1] = total[1] +  count1[i]
+            row = row + str(count1[i]) + '\t'
+        elif t == 2:
+            total[2] = total[2] +  count2[i]
+            row = row + str(count2[i]) + '\t'
         
-    if total1 > total2 and total1 > total3:
-        print("\n Technology!!")
-    elif total2 > total1 and total2 > total3:
-        print("\n Cars!!")
-    elif total3 > total2 and total3 > total1:
-        print("\n Sports!!")
+        i = i + 1
+    if t == 0:
+        o.write(f'Tech{n}\t{row}')
+    elif t == 1:
+        o.write(f'Cars{n}\t{row}')
+    elif t == 2:
+        o.write(f'Sports{n}\t{row}')
+    
+    print("Topic: ")
+    if total[0] > total[2] and total[0] > total[1]:
+        print("Technology!!\n")
+        print(row)             #take this value and add it to the ouput file
+
+    elif total[1] > total[2] and total[1] > total[0]:
+        print("Cars!!\n")
+        print(row)
+
+    elif total[2] > total[1] and total[2] > total[0]:
+        print("Sports!!\n")
+        print(row)
+        
     else:
         print("mixed")
-        
+    
+    o.close()   
 
-classify()
+
+    #===========================================================================
+    #To recover the data in the output file use the following function
+    a = open("output0.txt", 'r')
+    next(a)
+    b = open("output1.txt", 'r')
+    next(b)
+    c = open("output2.txt", 'r')
+    next(c)
+    o = open("totaloutput.txt", 'w')
+    
+    for line1 in a:
+        o.write(line1)
+    o.write('\n')
+    for line2 in b:
+        o.write(line2)
+    o.write('\n')
+    for line3 in c:
+        o.write(line3)
+    o.write('\n')       
+    #     print(line.split('\t'))
+    o.close()
+    #===========================================================================
+    
+def main(t, n):
+    vector0 = ["iphone", "coding", "internet", "software", "network", "samsung", "computer", "device"]
+    vector1 = ["engine", "gas", "vehicle", "drive", "motor", "car", "truck", "road"]
+    vector2 = ["hockey", "football", "golf", "soccer", "basketball", "baseball", "play", "sport"]
+    vector = vector0 + vector1 + vector2
+
+    j = 1
+    
+    o = open(f'output{t}.txt', 'w')
+    i = 0
+    o.write('Vector')
+    while(i < len(vector)):
+        o.write(f'\t{i}')
+        i = i + 1
+    o.close()
+    
+    while j <= n:
+        classify(vector, t, j)
+        j = j + 1
+    if t > 0:
+        main(t-1, n);
+#t = int(input("What category? (tech 0) (cars 1) (sports 2)"))
+n = int(input("How many documents in each category? "))
+main(2, n)
