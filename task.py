@@ -142,7 +142,7 @@ def main(t, n):
         o.write(f'{d},')
     o.write('\nVector'.ljust(13))
     while(i < len(vector)):
-        o.write(f'{i}'.ljust(5))
+        o.write(f'{i}'.ljust(12))
         i = i + 1
     o.close()
     
