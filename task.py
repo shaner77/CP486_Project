@@ -1,6 +1,7 @@
 from nt import getcwd
 import re
 from re import split
+import matplotlib.pyplot as plt   
 
 #  type number,  n documents
 def classify(vector, t, n):
@@ -45,7 +46,7 @@ def classify(vector, t, n):
     i = 0
     total = [0,0,0]
     full = ""
-    row = ""
+    row = []
     o = open(f'output{t}.txt', 'a')
     i = 0
     o.write('\n')
@@ -53,25 +54,28 @@ def classify(vector, t, n):
     while(i < len(vector)):
         if t == 0:
             total[0] = total[0] +  count0[i]
-            row = row + str(count0[i]) + '\t'
+            row.append(count0[i])
         elif t == 1:
             total[1] = total[1] +  count1[i]
-            row = row + str(count1[i]) + '\t'
+            row.append(count1[i])
         elif t == 2:
             total[2] = total[2] +  count2[i]
-            row = row + str(count2[i]) + '\t'
+            row.append(count2[i])
         
         i = i + 1
     if t == 0:
         o.write(f'Tech{n}'.ljust(12))
-        o.write(f'{row}')
+        for d in row:
+            o.write(f'{d}'.ljust(12))
     elif t == 1:
         o.write(f'Cars{n}'.ljust(12))
-        o.write(f'{row}')
+        for d in row:
+            o.write(f'{d}'.ljust(12))
     elif t == 2:
         o.write(f'Sports{n}'.ljust(12))
-        o.write(f'{row}')
-    
+        for d in row:
+            o.write(f'{d}'.ljust(12))
+            
     print("Topic: ")
     if total[0] > total[2] and total[0] > total[1]:
         print("Technology!!\n")
@@ -90,9 +94,6 @@ def classify(vector, t, n):
     
     o.close()   
 
-
-    #===========================================================================
-    #To recover the data in the output file use the following function
     a = open("output0.txt", 'r')
     next(a)
     next(a)
@@ -102,8 +103,17 @@ def classify(vector, t, n):
     c = open("output2.txt", 'r')
     next(c)
     next(c)
-    o = open("totaloutput.txt", 'w')
     
+    o = open("totaloutput.txt", 'w')
+    o.write('\t')
+    for i in vector:
+        if len(i) < 4:
+            o.write('\t')
+        if len(i) > 7:
+            o.write(f'\t{i} '.ljust(8))
+        else:
+            o.write(f'\t{i}\t'.ljust(6))
+    o.write('\n')
     for line1 in a:
         o.write(line1)
     o.write('\n')
@@ -118,8 +128,8 @@ def classify(vector, t, n):
     #===========================================================================
     
 def main(t, n):
-    vector0 = ["iphone", "coding", "internet", "software", "network", "samsung", "computer", "device", "screen", "wire"]
-    vector1 = ["engine", "gas", "vehicle", "drive", "motor", "car", "truck", "road", "wheel", "tire"]
+    vector0 = ["iphone", "code", "internet", "phone", "network", "samsung", "computer", "device", "program", "digital"]
+    vector1 = ["engine", "gas", "vehicle", "auto", "oil", "car", "fast", "road", "wheel", "tire"]
     vector2 = ["hockey", "football", "golf", "soccer", "basketball", "baseball", "play", "sport", "run", "kick"]
     vector = vector0 + vector1 + vector2
 
@@ -130,9 +140,9 @@ def main(t, n):
     
     for d in vector:
         o.write(f'{d},')
-    o.write('\nVector'.ljust(12))
+    o.write('\nVector'.ljust(13))
     while(i < len(vector)):
-        o.write(f'\t{i}')
+        o.write(f'{i}'.ljust(5))
         i = i + 1
     o.close()
     
@@ -141,6 +151,19 @@ def main(t, n):
         j = j + 1
     if t > 0:
         main(t-1, n);
+#def NB():
+    
+    
+    
+    #===========================================================================
+    # for i in vector:
+    #     plt.scatter(b[0], b[1], color="red")
+    #     plt.plot(x_values, y_values, color="red", linewidth=0.5)
+    #     plt.show()
+    #===========================================================================
+        
+    
+    
 #t = int(input("What category? (tech 0) (cars 1) (sports 2)"))
 n = int(input("How many documents in each category? "))
 main(2, n)
